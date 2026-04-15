@@ -653,7 +653,7 @@
         <h2 class="matching-title">Find <em>your</em> Soolyan</h2>
         <p class="matching-sub">Answer three short questions and we'll match you with the Soolyan who's right for where you are right now.</p>
 
-        <div class="match-card">
+        <div class="match-card" id="matchCard">
           <!-- Form -->
           <form id="matchForm" novalidate>
             <div class="match-question">
@@ -874,10 +874,7 @@
     });
 
     // ── Smart Matching Form ───────────────────────────────────────
-    var matchForm = document.getElementById('matchForm');
-    var matchSuccess = document.getElementById('matchSuccess');
-
-    matchForm.onsubmit = function(e) {
+    document.getElementById('matchForm').onsubmit = function(e) {
       e.preventDefault();
 
       var q1    = document.getElementById('mq1').value.trim();
@@ -891,9 +888,13 @@
         return false;
       }
 
-      // Hide form, show success immediately
-      matchForm.style.display = 'none';
-      matchSuccess.style.display = 'block';
+      // Replace entire card content with success message
+      document.getElementById('matchCard').innerHTML =
+        '<div style="text-align:center;padding:40px 20px;">' +
+        '<span style="font-size:2.8rem;display:block;margin-bottom:16px;">🌿</span>' +
+        '<h3 style="font-family:\'Playfair Display\',serif;font-size:1.4rem;color:#1E130A;margin-bottom:12px;">Your Soolyan is on her way.</h3>' +
+        '<p style="color:#7A6558;font-size:.93rem;line-height:1.7;">We\'ve found your match. Check your inbox — we\'ve sent you the details personally.</p>' +
+        '</div>';
 
       // Send to Apps Script in background
       fetch(SHEET_URL, {
