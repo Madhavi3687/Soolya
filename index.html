@@ -393,6 +393,84 @@
       .ft-bottom { flex-direction: column; align-items: flex-start; }
       .tabs { max-width: 100%; }
     }
+
+    /* ── Matching Section ──────────────────────────────────────── */
+    .matching {
+      padding: 100px 0;
+      background: var(--warm);
+      position: relative;
+      overflow: hidden;
+    }
+    .matching::before {
+      content: ''; position: absolute; top: -120px; right: -80px;
+      width: 480px; height: 480px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(196,113,79,.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .matching-inner { max-width: 640px; margin: 0 auto; text-align: center; }
+    .matching-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 2.7rem);
+      font-weight: 500; line-height: 1.22;
+      color: var(--ink); margin-bottom: 14px;
+    }
+    .matching-title em { color: var(--terra); font-style: italic; }
+    .matching-sub { font-size: .97rem; color: var(--ink-m); margin-bottom: 44px; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .match-card {
+      background: #fff; border-radius: 24px;
+      padding: 40px; text-align: left;
+      box-shadow: 0 4px 32px rgba(28,20,16,.07);
+      border: 1px solid var(--parch);
+    }
+    .match-question { margin-bottom: 28px; }
+    .match-question label {
+      display: block; font-size: .82rem; font-weight: 600;
+      color: var(--terra); letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .match-question textarea {
+      width: 100%; border: 1.5px solid var(--parch);
+      border-radius: 12px; padding: 14px 16px;
+      font-family: 'Inter', sans-serif; font-size: .93rem;
+      color: var(--ink); background: var(--cream);
+      resize: none; outline: none; transition: border-color .18s;
+      line-height: 1.55;
+    }
+    .match-question textarea:focus { border-color: var(--terra); }
+    .match-question select {
+      width: 100%; border: 1.5px solid var(--parch);
+      border-radius: 12px; padding: 14px 16px;
+      font-family: 'Inter', sans-serif; font-size: .93rem;
+      color: var(--ink); background: var(--cream);
+      outline: none; cursor: pointer; transition: border-color .18s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6558' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 16px center;
+    }
+    .match-question select:focus { border-color: var(--terra); }
+    .match-submit {
+      width: 100%; padding: 16px; border-radius: 50px;
+      background: var(--terra); color: #fff; border: none;
+      font-family: 'Inter', sans-serif; font-size: .93rem; font-weight: 600;
+      cursor: pointer; transition: background .18s, transform .18s, box-shadow .18s;
+      box-shadow: 0 4px 18px rgba(196,113,79,.3); margin-top: 8px;
+    }
+    .match-submit:hover { background: #B5623F; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,113,79,.42); }
+    .match-submit:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .match-success {
+      display: none; text-align: center; padding: 20px 0;
+    }
+    .match-success.visible { display: block; }
+    .match-success-icon { font-size: 2.4rem; margin-bottom: 12px; display: block; }
+    .match-success h3 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem;
+      color: var(--ink); margin-bottom: 10px;
+    }
+    .match-success p { color: var(--ink-m); font-size: .92rem; line-height: 1.6; }
+    .match-name { color: var(--terra); font-weight: 600; }
+    @media (max-width: 640px) {
+      .match-card { padding: 28px 20px; }
+    }
   </style>
 </head>
 <body>
@@ -563,6 +641,59 @@
             <div class="mini"><div class="mini-n">91%</div><div class="mini-l">Renewal rate</div></div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Smart Matching -->
+  <section class="matching" id="find-soolyan">
+    <div class="container">
+      <div class="matching-inner">
+        <p class="eyebrow">AI-Powered Matching</p>
+        <h2 class="matching-title">Find <em>your</em> Soolyan</h2>
+        <p class="matching-sub">Answer three short questions and we'll match you with the Soolyan who's right for where you are right now.</p>
+
+        <div class="match-card">
+          <!-- Form -->
+          <form id="matchForm" novalidate>
+            <div class="match-question">
+              <label for="mq1">What's been weighing on you lately?</label>
+              <textarea id="mq1" name="q1" rows="3" placeholder="Share as much or as little as feels right…" required></textarea>
+            </div>
+            <div class="match-question">
+              <label for="mq2">What would feel different if things improved?</label>
+              <textarea id="mq2" name="q2" rows="3" placeholder="What does better look like for you?" required></textarea>
+            </div>
+            <div class="match-question">
+              <label for="mstyle">How do you prefer to be supported?</label>
+              <select id="mstyle" name="style" required>
+                <option value="">Choose one…</option>
+                <option value="Challenge me and push me forward">Challenge me and push me forward</option>
+                <option value="Hold space and listen deeply">Hold space and listen deeply</option>
+                <option value="A mix of both">A mix of both</option>
+              </select>
+            </div>
+            <div class="match-question">
+              <label for="mname">Your name</label>
+              <textarea id="mname" name="mname" rows="1" placeholder="Priya Sharma" required style="resize:none;height:48px;padding-top:12px;"></textarea>
+            </div>
+            <div class="match-question" style="margin-bottom:0;">
+              <label for="memail">Your email — we'll send your match here</label>
+              <textarea id="memail" name="memail" rows="1" placeholder="priya@example.com" required style="resize:none;height:48px;padding-top:12px;"></textarea>
+            </div>
+            <button type="submit" class="match-submit" id="matchBtn">
+              Find My Soolyan →
+            </button>
+          </form>
+
+          <!-- Success state -->
+          <div class="match-success" id="matchSuccess">
+            <span class="match-success-icon">🌿</span>
+            <h3>Your Soolyan is on her way.</h3>
+            <p>We've found your match and she'll reach out to you personally. Check your inbox — we've sent you the details.</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -740,6 +871,46 @@
       form.style.display = 'none';
       document.getElementById('roleToggle').style.display = 'none';
       document.getElementById('wlSuccess').classList.add('visible');
+    });
+
+    // ── Smart Matching Form ───────────────────────────────────────
+    document.getElementById('matchForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q1     = document.getElementById('mq1').value.trim();
+      const q2     = document.getElementById('mq2').value.trim();
+      const style  = document.getElementById('mstyle').value;
+      const name   = document.getElementById('mname').value.trim();
+      const email  = document.getElementById('memail').value.trim();
+      const btn    = document.getElementById('matchBtn');
+
+      // Basic validation
+      if (!q1 || !q2 || !style || !name || !email) {
+        alert('Please fill in all fields so we can find your best match.');
+        return;
+      }
+
+      // Loading state
+      btn.disabled = true;
+      btn.textContent = 'Finding your match…';
+
+      const payload = {
+        type:  'match',
+        q1, q2, style, name, email,
+        date:  new Date().toISOString()
+      };
+
+      try {
+        await fetch(SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) { /* submission still goes through */ }
+
+      // Show success
+      document.getElementById('matchForm').style.display = 'none';
+      document.getElementById('matchSuccess').classList.add('visible');
     });
   </script>
 </body>
