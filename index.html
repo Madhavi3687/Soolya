@@ -675,11 +675,11 @@
             </div>
             <div class="match-question">
               <label for="mname">Your name</label>
-              <textarea id="mname" name="mname" rows="1" placeholder="Priya Sharma" required style="resize:none;height:48px;padding-top:12px;"></textarea>
+              <input type="text" id="mname" name="mname" placeholder="Priya Sharma" required style="width:100%;border:1.5px solid var(--parch);border-radius:12px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:.93rem;color:var(--ink);background:var(--cream);outline:none;" />
             </div>
             <div class="match-question" style="margin-bottom:0;">
               <label for="memail">Your email — we'll send your match here</label>
-              <textarea id="memail" name="memail" rows="1" placeholder="priya@example.com" required style="resize:none;height:48px;padding-top:12px;"></textarea>
+              <input type="email" id="memail" name="memail" placeholder="priya@example.com" required style="width:100%;border:1.5px solid var(--parch);border-radius:12px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:.93rem;color:var(--ink);background:var(--cream);outline:none;" />
             </div>
             <button type="submit" class="match-submit" id="matchBtn">
               Find My Soolyan →
@@ -687,10 +687,10 @@
           </form>
 
           <!-- Success state -->
-          <div class="match-success" id="matchSuccess">
-            <span class="match-success-icon">🌿</span>
-            <h3>Your Soolyan is on her way.</h3>
-            <p>We've found your match and she'll reach out to you personally. Check your inbox — we've sent you the details.</p>
+          <div id="matchSuccess" style="display:none;text-align:center;padding:32px 0;">
+            <span style="font-size:2.4rem;display:block;margin-bottom:12px;">🌿</span>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ink);margin-bottom:10px;">Your Soolyan is on her way.</h3>
+            <p style="color:var(--ink-m);font-size:.92rem;line-height:1.6;">We've found your match. Check your inbox — we've sent you the details.</p>
           </div>
         </div>
 
@@ -874,39 +874,37 @@
     });
 
     // ── Smart Matching Form ───────────────────────────────────────
-    document.getElementById('matchForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const q1     = document.getElementById('mq1').value.trim();
-      const q2     = document.getElementById('mq2').value.trim();
-      const style  = document.getElementById('mstyle').value;
-      const name   = document.getElementById('mname').value.trim();
-      const email  = document.getElementById('memail').value.trim();
-      const btn    = document.getElementById('matchBtn');
+    var matchForm = document.getElementById('matchForm');
+    var matchSuccess = document.getElementById('matchSuccess');
 
-      // Basic validation
+    matchForm.onsubmit = function(e) {
+      e.preventDefault();
+
+      var q1    = document.getElementById('mq1').value.trim();
+      var q2    = document.getElementById('mq2').value.trim();
+      var style = document.getElementById('mstyle').value;
+      var name  = document.getElementById('mname').value.trim();
+      var email = document.getElementById('memail').value.trim();
+
       if (!q1 || !q2 || !style || !name || !email) {
         alert('Please fill in all fields so we can find your best match.');
-        return;
+        return false;
       }
 
-      // Show success immediately — don't wait for network
-      document.getElementById('matchForm').style.display = 'none';
-      document.getElementById('matchSuccess').classList.add('visible');
+      // Hide form, show success immediately
+      matchForm.style.display = 'none';
+      matchSuccess.style.display = 'block';
 
-      // Send in background
-      const payload = {
-        type:  'match',
-        q1, q2, style, name, email,
-        date:  new Date().toISOString()
-      };
-
+      // Send to Apps Script in background
       fetch(SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(() => { /* network hiccup — submission still goes through */ });
-    });
+        body: JSON.stringify({ type: 'match', q1: q1, q2: q2, style: style, name: name, email: email, date: new Date().toISOString() })
+      }).catch(function() {});
+
+      return false;
+    };
   </script>
 </body>
 </html>
