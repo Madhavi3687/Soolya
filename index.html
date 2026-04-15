@@ -889,28 +889,23 @@
         return;
       }
 
-      // Loading state
-      btn.disabled = true;
-      btn.textContent = 'Finding your match…';
+      // Show success immediately — don't wait for network
+      document.getElementById('matchForm').style.display = 'none';
+      document.getElementById('matchSuccess').classList.add('visible');
 
+      // Send in background
       const payload = {
         type:  'match',
         q1, q2, style, name, email,
         date:  new Date().toISOString()
       };
 
-      try {
-        await fetch(SHEET_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch (_) { /* submission still goes through */ }
-
-      // Show success
-      document.getElementById('matchForm').style.display = 'none';
-      document.getElementById('matchSuccess').classList.add('visible');
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(() => { /* network hiccup — submission still goes through */ });
     });
   </script>
 </body>
